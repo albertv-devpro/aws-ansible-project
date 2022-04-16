@@ -22,7 +22,7 @@
     - name: Create first public subnet for the Ec2
       ec2_vpc_subnet:
         vpc_id: "{{ vpcout.vpc.id}}"
-        cidr: "{{ PubSub1Cidr}}"
+        cidr: "{{ PubSub1Cidr }}"
         state: "{{ state }}"
         az: "{{ zone1 }}"
         map_public: yes
@@ -37,7 +37,7 @@
     - name: Create second public subnet for the Ec2
       ec2_vpc_subnet:
         vpc_id: "{{ vpcout.vpc.id}}"
-        cidr: "{{ PubSub2Cidr}}"
+        cidr: "{{ PubSub2Cidr }}"
         state: "{{ state }}"
         az: "{{ zone2 }}"
         map_public: yes
@@ -52,7 +52,7 @@
     - name: Create subnet for the Ec2
       ec2_vpc_subnet:
         vpc_id: "{{ vpcout.vpc.id}}"
-        cidr: "{{ PubSub3Cidr}}"
+        cidr: "{{ PubSub3Cidr }}"
         state: "{{ state }}"
         az: "{{ zone3 }}"
         map_public: yes
@@ -63,3 +63,50 @@
 
     - debug:
           var: motiva_pubsub3
+
+
+    - name: Create Private subnet for the Ec2
+      ec2_vpc_subnet:
+        vpc_id: "{{ vpcout.vpc.id}}"
+        cidr: "{{ PrivSub4Cidr }}"
+        state: "{{ state }}"
+        az: "{{ zone1 }}"
+        map_public: yes
+        region: "{{ region }}"
+        tags:
+          Name: Private Subnet1
+      register: motiva_privsub1
+
+    - debug:
+          var: motiva_privsub1
+
+    - name: Create Private subnet for the Ec2
+      ec2_vpc_subnet:
+        vpc_id: "{{ vpcout.vpc.id}}"
+        cidr: "{{ PrivSub5Cidr }}"
+        state: "{{ state }}"
+        az: "{{ zone1 }}"
+        map_public: yes
+        region: "{{ region }}"
+        tags:
+          Name: Private Subnet2
+      register: motiva_privsub2
+
+    - debug:
+          var: motiva_privsub3
+
+
+    - name: Create Private subnet for the Ec2
+      ec2_vpc_subnet:
+        vpc_id: "{{ vpcout.vpc.id}}"
+        cidr: "{{ PrivSub6Cidr }}"
+        state: "{{ state }}"
+        az: "{{ zone1 }}"
+        map_public: yes
+        region: "{{ region }}"
+        tags:
+          Name: Private Subnet6
+      register: motiva_privsub6
+
+    - debug:
+          var: motiva_privsub6
