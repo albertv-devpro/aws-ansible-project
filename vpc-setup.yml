@@ -16,10 +16,10 @@
          state: "{{ state }}"
       register: vpcout
 
-    - debug:
-          var: vpcout
+#    - debug:
+#          var: vpcout
 
-    - name: Create subnet for the Ec2
+    - name: Create first public subnet for the Ec2
       ec2_vpc_subnet:
         vpc_id: "{{ vpcout.vpc.id}}"
         cidr: "{{ PubSub1Cidr}}"
@@ -33,3 +33,33 @@
 
     - debug:
           var: motiva_pubsub1
+
+    - name: Create second public subnet for the Ec2
+      ec2_vpc_subnet:
+        vpc_id: "{{ vpcout.vpc.id}}"
+        cidr: "{{ PubSub2Cidr}}"
+        state: "{{ state }}"
+        az: "{{ zone2 }}"
+        map_public: yes
+        region: "{{ region }}"
+        tags:
+          Name: Public Subnet2
+      register: motiva_pubsub2
+
+    - debug:
+          var: motiva_pubsub2
+
+    - name: Create subnet for the Ec2
+      ec2_vpc_subnet:
+        vpc_id: "{{ vpcout.vpc.id}}"
+        cidr: "{{ PubSub3Cidr}}"
+        state: "{{ state }}"
+        az: "{{ zone3 }}"
+        map_public: yes
+        region: "{{ region }}"
+        tags:
+          Name: Public Subnet3
+      register: motiva_pubsub3
+
+    - debug:
+          var: motiva_pubsub3
