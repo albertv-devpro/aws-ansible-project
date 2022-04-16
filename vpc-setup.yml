@@ -85,7 +85,7 @@
         vpc_id: "{{ vpcout.vpc.id}}"
         cidr: "{{ PrivSub5Cidr }}"
         state: "{{ state }}"
-        az: "{{ zone1 }}"
+        az: "{{ zone2 }}"
         map_public: yes
         region: "{{ region }}"
         tags:
@@ -101,7 +101,7 @@
         vpc_id: "{{ vpcout.vpc.id}}"
         cidr: "{{ PrivSub6Cidr }}"
         state: "{{ state }}"
-        az: "{{ zone1 }}"
+        az: "{{ zone3 }}"
         map_public: yes
         region: "{{ region }}"
         tags:
