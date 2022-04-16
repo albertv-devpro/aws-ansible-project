@@ -28,7 +28,7 @@
         map_public: yes
         tags:
           Name: Public Subnet1
-      register: motiva-pubsub1
+      register: motiva_pubsub1
 
     - debug:
-          var: otiva-pubsub1
+          var: motiva_pubsub1
