@@ -26,6 +26,7 @@
         state: "{{ state }}"
         az: "{{ zone1 }}"
         map_public: yes
+        region: "{{ region }}"
         tags:
           Name: Public Subnet1
       register: motiva_pubsub1
