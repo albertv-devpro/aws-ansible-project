@@ -15,3 +15,20 @@
          tenancy: default
          state: "{{ state }}"
       register: vpcout
+
+    - debug:
+          var: vpcout
+
+    - name: Create subnet for the Ec2
+      ec2_vpc_subnet:
+        vpc_id: "{{ vpcout.vpc.id}}"
+        cidr: "{{ PubSub1Cidr}}"
+        state: "{{ state }}"
+        az: "{{ zone1 }}"
+        map_public: yes
+        tags:
+          Name: Public Subnet1
+      register: motiva-pubsub1
+
+    - debug:
+          var: otiva-pubsub1
