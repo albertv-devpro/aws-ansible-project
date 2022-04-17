@@ -35,7 +35,7 @@
            to_port: 22
            cidr_ip: "{{ MY_IP }}"
            rule_desc: allow all on port 22
-        register: BastionSG_out
+      register: BastionSG_out
 
 ####################################################
     - name: Create Bastion Host Instance
