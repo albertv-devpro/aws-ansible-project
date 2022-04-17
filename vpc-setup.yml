@@ -142,7 +142,7 @@
 
 #####################################################
 
-     - name: Create a Private subnet route table.
+    - name: Create a Private subnet route table.
        ec2_vpc_route_table:
          vpc_id: "{{ vpc_out.vpc.id}}"
          region: "{{ region }}"
