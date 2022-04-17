@@ -26,14 +26,15 @@
     - name: Create Bastion host security group rule descriptions
       ec2_group:
         name: Motiva-Bastion-Host-SG
-        description: sg with rule descriptions for bastion host
+        description: allow port 22 from anywhere and lall port within sg
         vpc_id: "{{ vpc_id }}"
         region: "{{ region }}"
         rules:
-          from_port: 22
-          to_port: 22
-          cidr_ip: "{{ MY_IP }}"
-          rule_desc: allow all on port 22
+         - proto: tcp
+           from_port: 22
+           to_port: 22
+           cidr_ip: "{{ MY_IP }}"
+           rule_desc: allow all on port 22
         register: BastionSG_out
 
 ####################################################
