@@ -44,6 +44,9 @@
         extra_args: --upgrade
         executable: pip3
 
+    - name: install pip3
+      apt: name=python3-pip state=present
+
     - name: Install boto3 and botocore with pip3 module
       pip:
         name:
