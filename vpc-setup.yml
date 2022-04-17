@@ -140,24 +140,24 @@
             gateway_id: "{{ Motiva_IGW_out.gateway_id }}"
       register: Motiva_pubRT_out
 
-# ####################################################
-#
-#     - name: Create a Private subnet route table.
-#       ec2_vpc_route_table:
-#         vpc_id: "{{ vpc_out.vpc.id}}"
-#         region: "{{ region }}"
-#         subnets:
-#           - "{{ Motiva_privSub1_out.subnet.id }}"
-#           - "{{ Motiva_privSub2_out.subnet.id }}"
-#           - "{{ Motiva_privSub3_out.subnet_id }}"
-#         routes:
-#           - dest: 0.0.0.0/0
-#             gateway_id: "{{ Motiva_IGW_out.gateway_id }}"
-#         tags:
-#            Name: Motiva_privRT
-#       register: Motiva_privRT_out
-#
-#  ####################################################
+#####################################################
+
+     - name: Create a Private subnet route table.
+       ec2_vpc_route_table:
+         vpc_id: "{{ vpc_out.vpc.id}}"
+         region: "{{ region }}"
+         subnets:
+           - "{{ Motiva_privSub1_out.subnet.id }}"
+           - "{{ Motiva_privSub2_out.subnet.id }}"
+           - "{{ Motiva_privSub3_out.subnet_id }}"
+         routes:
+           - dest: 0.0.0.0/0
+             gateway_id: "{{ Motiva_IGW_out.gateway_id }}"
+         tags:
+            Name: Motiva_privRT
+       register: Motiva_privRT_out
+
+#####################################################
 
     - debug:
           var: "{{ item }}"
@@ -171,7 +171,7 @@
             - Motiva_privSub3_out.subnet.id
             - Motiva_IGW_out.gateway_id
             - Motiva_NATGW_out.nat_gateway_id
-#            - Motiva_privRT_out.route_table.id
+            - Motiva_privRT_out.route_table.id
             - Motiva_pubRT_out.route_table.id
 
     - set_fact:
@@ -184,13 +184,13 @@
         Motiva_privSub3_id: "{{ Motiva_privSub3_out.subnet.id }}"
         Motiva_IGW_id: "{{ Motiva_IGW_out.gateway_id }}"
         Motiva_NATGW_id: "{{ Motiva_NATGW_out.nat_gateway_id }}"
-#        Motiva_privRT_route_id: "{{ Motiva_privRT_out.route_table.id }}"
+        Motiva_privRT_route_id: "{{ Motiva_privRT_out.route_table.id }}"
         Motiva_pubRT_route_id: "{{ Motiva_pubRT_out.route_table.id}}"
         cacheable: yes
 
     - name: Create variable file for VPC output
       copy:
-        content: "vpc_id: {{ vpc_out.vpc.id }}\nMotiva_pubSub1_id: {{ Motiva_pubSub1_out.subnet.id }}\nMotiva_pubSub2_id: {{ motiva_pubSub1_out.subnet.id }}\nMotiva_pubSub3_id: {{ Motiva_pubsub1_out.subnet.id }}\nMotiva_privSub1_id: {{ Motiva_privSub1_out.subnet.id }}\nMotiva_privSub2_id: {{ Motiva_privSub2_out.subnet.id }}\nMotiva_privSub3_id: {{ Motiva_privSub3_out.subnet.id }}\nMotiva_igw_id: {{ Motiva_IGW_out.gateway_id }}\nMotiva_NATGW_id: {{ Motiva_NATGW_out.nat_gateway_id }}\nMotiva_pubRT_route_id: {{ Motiva_pubRT_out.route_table.id}}"
+        content: "vpc_id: {{ vpc_out.vpc.id }}\nMotiva_pubSub1_id: {{ Motiva_pubSub1_out.subnet.id }}\nMotiva_pubSub2_id: {{ motiva_pubSub1_out.subnet.id }}\nMotiva_pubSub3_id: {{ Motiva_pubsub1_out.subnet.id }}\nMotiva_privSub1_id: {{ Motiva_privSub1_out.subnet.id }}\nMotiva_privSub2_id: {{ Motiva_privSub2_out.subnet.id }}\nMotiva_privSub3_id: {{ Motiva_privSub3_out.subnet.id }}\nMotiva_igw_id: {{ Motiva_IGW_out.gateway_id }}\nMotiva_NATGW_id: {{ Motiva_NATGW_out.nat_gateway_id }}\nMotiva_pubRT_route_id: {{ Motiva_pubRT_out.route_table.id}}\n\nMotiva_privRT_route_id: {{ Motiva_privRT_out.route_table.id}}"
         dest: vars/output_vars
 
 
