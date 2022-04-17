@@ -45,7 +45,7 @@
       pip:
         name: pip
         extra_args: --upgrade
-        executable: pip3
+        executable: pip3.7
 
     - name: Install boto3 and botocore with pip3 module
       pip:
