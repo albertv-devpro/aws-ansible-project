@@ -178,8 +178,8 @@
     - set_fact:
         vpc_id: "{{ vpc_out.vpc.id }}"
         Motiva_pubSub1_id: "{{ Motiva_pubSub1_out.subnet.id }}"
-        Motiva_pubSub2_id: "{{ Motiva_pubSub1_out.subnet.id }}"
-        Motiva_pubSub3_id: "{{ Motiva_pubSub1_out.subnet.id }}"
+        Motiva_pubSub2_id: "{{ Motiva_pubSub2_out.subnet.id }}"
+        Motiva_pubSub3_id: "{{ Motiva_pubSub3_out.subnet.id }}"
         Motiva_privSub1_id: "{{ Motiva_privSub1_out.subnet.id }}"
         Motiva_privSub2_id: "{{ Motiva_privSub2_out.subnet.id }}"
         Motiva_privSub3_id: "{{ Motiva_privSub3_out.subnet.id }}"
