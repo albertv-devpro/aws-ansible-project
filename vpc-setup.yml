@@ -161,18 +161,19 @@
 
     - debug:
           var: "{{ item }}"
-          loop:
-            - vpc_out.vpc.id
-            - Motiva_pubSub1_out.subnet.id
-            - Motiva_pubSub2_out.subnet.id
-            - Motiva_pubSub3_out.subnet.id
-            - Motiva_privSub1_out.subnet.id
-            - Motiva_privSub2_out.subnet.id
-            - Motiva_privSub3_out.subnet.id
-            - Motiva_IGW_out.gateway_id
-            - Motiva_NATGW_out.nat_gateway_id
-            - Motiva_privRT_out.route_table.id
-            - Motiva_pubRT_out.route_table.id
+      loop:
+        - vpc_out.vpc.id
+        - Motiva_pubSub1_out.subnet.id
+        - Motiva_pubSub2_out.subnet.id
+        - Motiva_pubSub3_out.subnet.id
+        - Motiva_privSub1_out.subnet.id
+        - Motiva_privSub2_out.subnet.id
+        - Motiva_privSub3_out.subnet.id
+        - Motiva_IGW_out.gateway_id
+        - Motiva_NATGW_out.nat_gateway_id
+        - Motiva_privRT_out.route_table.id
+        - Motiva_pubRT_out.route_table.id
+
 
     - set_fact:
         vpc_id: "{{ vpc_out.vpc.id }}"
