@@ -5,6 +5,8 @@
     - name: Import VPC variables
       include_vars: vars/vpc_setup
 
+####################################################
+
     - name: Create vprofile VPC
       ec2_vpc_net:
          name: "{{ vpc_name }}"
@@ -14,99 +16,184 @@
          dns_hostnames: yes
          tenancy: default
          state: "{{ state }}"
-      register: vpcout
+      register: vpc_out
 
-#    - debug:
-#          var: vpcout
+####################################################
 
-    - name: Create first public subnet for the Ec2
+    - name: Create first public subnet
       ec2_vpc_subnet:
-        vpc_id: "{{ vpcout.vpc.id}}"
+        vpc_id: "{{ vpc_out.vpc.id}}"
         cidr: "{{ PubSub1Cidr }}"
         state: "{{ state }}"
         az: "{{ zone1 }}"
         map_public: yes
         region: "{{ region }}"
         tags:
-          Name: Public Subnet1
-      register: motiva_pubsub1
+          Name: Motiva-pubSub1
+      register: Motiva_pubSub1_out
 
-    - debug:
-          var: motiva_pubsub1
+####################################################
 
-    - name: Create second public subnet for the Ec2
+    - name: Create second public subnet
       ec2_vpc_subnet:
-        vpc_id: "{{ vpcout.vpc.id}}"
+        vpc_id: "{{ vpc_out.vpc.id}}"
         cidr: "{{ PubSub2Cidr }}"
         state: "{{ state }}"
         az: "{{ zone2 }}"
         map_public: yes
         region: "{{ region }}"
         tags:
-          Name: Public Subnet2
-      register: motiva_pubsub2
+          Name: Motiva-pubSub2
+      register: Motiva_pubSub2_out
 
-    - debug:
-          var: motiva_pubsub2
+####################################################
 
-    - name: Create subnet for the Ec2
+    - name: Create Third Public subnet
       ec2_vpc_subnet:
-        vpc_id: "{{ vpcout.vpc.id}}"
+        vpc_id: "{{ vpc_out.vpc.id}}"
         cidr: "{{ PubSub3Cidr }}"
         state: "{{ state }}"
         az: "{{ zone3 }}"
         map_public: yes
         region: "{{ region }}"
         tags:
-          Name: Public Subnet3
-      register: motiva_pubsub3
+          Name: Motiva-pubSub3
+      register: Motiva_pubSub3_out
+####################################################
 
-    - debug:
-          var: motiva_pubsub3
-
-
-    - name: Create Private subnet for the Ec2
+    - name: Create first Private subnet
       ec2_vpc_subnet:
-        vpc_id: "{{ vpcout.vpc.id}}"
+        vpc_id: "{{ vpc_out.vpc.id}}"
         cidr: "{{ PrivSub4Cidr }}"
         state: "{{ state }}"
         az: "{{ zone1 }}"
         map_public: yes
         region: "{{ region }}"
         tags:
-          Name: Private Subnet1
-      register: motiva_privsub1
+          Name: Motiva-privSub1
+      register: Motiva_privSub1_out
 
-    - debug:
-          var: motiva_privsub1
+####################################################
 
-    - name: Create Private subnet for the Ec2
+    - name: Create Second Private subnet
       ec2_vpc_subnet:
-        vpc_id: "{{ vpcout.vpc.id}}"
+        vpc_id: "{{ vpc_out.vpc.id}}"
         cidr: "{{ PrivSub5Cidr }}"
         state: "{{ state }}"
         az: "{{ zone2 }}"
         map_public: yes
         region: "{{ region }}"
         tags:
-          Name: Private Subnet2
-      register: motiva_privsub2
+          Name: Motiva-privSub2
+      register: Motiva_privSub2_out
 
-    - debug:
-          var: motiva_privsub3
+####################################################
 
-
-    - name: Create Private subnet for the Ec2
+    - name: Create Third Private subnet
       ec2_vpc_subnet:
-        vpc_id: "{{ vpcout.vpc.id}}"
+        vpc_id: "{{ vpc_out.vpc.id}}"
         cidr: "{{ PrivSub6Cidr }}"
         state: "{{ state }}"
         az: "{{ zone3 }}"
         map_public: yes
         region: "{{ region }}"
         tags:
-          Name: Private Subnet6
-      register: motiva_privsub6
+          Name: Motiva-privSub3
+      register: Motiva_privSub3_out
+
+####################################################
+
+    - name: Create an internet gateway
+      ec2_vpc_igw:
+        vpc_id: "{{ vpc_out.vpc.id}}"
+        state: present
+        region: "{{ region }}"
+        tags:
+          Name: Motiva-IGW
+      register: Motiva_IGW_out
+
+####################################################
+
+    - name: Create new nat gateway and allocate new EIP if a nat gateway does not yet exist in the subnet.
+      ec2_vpc_nat_gateway:
+        state: present
+        subnet_id: "{{ Motiva_pubSub1_out.subnet.id }}"
+        wait: yes
+        region: "{{ region }}"
+        if_exist_do_not_create: true
+        tags:
+          Name: Motiva-NATGW
+      register: Motiva_NATGW_out
+
+####################################################
+
+    - name: Create a public subnet route table.
+      ec2_vpc_route_table:
+        vpc_id: "{{ vpc_out.vpc.id}}"
+        region: "{{ region }}"
+        tags:
+          Name: Motiva_pubRT
+        subnets:
+          - "{{ Motiva_pubSub1_out.subnet.id }}"
+          - "{{ Motiva_pubSub2_out.subnet.id }}"
+          - "{{ Motiva_pubSub3_out.subnet_id }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ Motiva_IGW_out.gateway_id }}"
+      register: Motiva_pubRT_out
+
+ ####################################################
+
+     - name: Create a Private subnet route table.
+       ec2_vpc_route_table:
+         vpc_id: "{{ vpc_out.vpc.id}}"
+         region: "{{ region }}"
+         subnets:
+           - "{{ Motiva_privSub1_out.subnet.id }}"
+           - "{{ Motiva_privSub2_out.subnet.id }}"
+           - "{{ Motiva_privSub3_out.subnet_id }}"
+         routes:
+           - dest: 0.0.0.0/0
+             gateway_id: "{{ Motiva_IGW_out.gateway_id }}"
+         tags:
+            Name: Motiva_privRT
+       register: Motiva_privRT_out
+
+  ####################################################
 
     - debug:
-          var: motiva_privsub6
+          var: "{{ item }}"
+          loop:
+            - vpc_out.vpc.id
+            - Motiva_pubSub1_out.subnet.id
+            - Motiva_pubSub2_out.subnet.id
+            - Motiva_pubSub3_out.subnet.id
+            - Motiva_privSub1_out.subnet.id
+            - Motiva_privSub2_out.subnet.id
+            - Motiva_privSub3_out.subnet.id
+            - Motiva_IGW_out.gateway_id
+            - Motiva_NATGW_out.nat_gateway_id
+            - Motiva_privRT_out.route_table.id
+            - Motiva_pubRT_out.route_table.id
+
+    - set_fact:
+        vpc_id: "{{ vpc_out.vpc.id }}"
+        Motiva_pubSub1_id: "{{ Motiva_pubSub1_out.subnet.id }}"
+        Motiva_pubSub2_id: "{{ Motiva_pubSub1_out.subnet.id }}"
+        Motiva_pubSub3_id: "{{ Motiva_pubSub1_out.subnet.id }}"
+        Motiva_privSub1_id: "{{ Motiva_privSub1_out.subnet.id }}"
+        Motiva_privSub2_id: "{{ Motiva_privSub2_out.subnet.id }}"
+        Motiva_privSub3_id: "{{ Motiva_privSub3_out.subnet.id }}"
+        Motiva_IGW_id: "{{ Motiva_IGW_out.gateway_id }}"
+        Motiva_NATGW_id: "{{ Motiva_NATGW_out.nat_gateway_id }}"
+        Motiva_privRT_route_id: "{{ Motiva_privRT_out.route_table.id }}"
+        Motiva_pubRT_route_id: "{{ Motiva_pubRT_out.route_table.id}}"
+        cacheable: yes
+
+    - name: Create variable file for VPC output
+      copy:
+        content: "vpc_id: {{ vpc_out.vpc.id }}\nMotiva_pubSub1_id: {{ Motiva_pubSub1_out.subnet.id }}\nMotiva_pubSub2_id: {{ motiva_pubSub1_out.subnet.id }}\nMotiva_pubSub3_id: {{ Motiva_pubsub1_out.subnet.id }}\nMotiva_privSub1_id: {{ Motiva_privSub1_out.subnet.id }}\nMotiva_privSub2_id: {{ Motiva_privSub2_out.subnet.id }}\nMotiva_privSub3_id: {{ Motiva_privSub3_out.subnet.id }}\nMotiva_igw_id: {{ Motiva_IGW_out.gateway_id }}\nMotiva_NATGW_id: {{ Motiva_NATGW_out.nat_gateway_id }}\nMotiva_privRT_route_id: {{ Motiva_privRT_out.route_table.id }}\nMotiva_pubRT_route_id: {{ Motiva_pubRT_out.route_table.id}}"
+        dest: vars/output_vars
+
+
+
