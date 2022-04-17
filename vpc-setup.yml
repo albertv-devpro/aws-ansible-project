@@ -134,7 +134,7 @@
         subnets:
           - "{{ Motiva_pubSub1_out.subnet.id }}"
           - "{{ Motiva_pubSub2_out.subnet.id }}"
-          - "{{ Motiva_pubSub3_out.subnet_id }}"
+          - "{{ Motiva_pubSub3_out.subnet.id }}"
         routes:
           - dest: 0.0.0.0/0
             gateway_id: "{{ Motiva_IGW_out.gateway_id }}"
@@ -149,7 +149,7 @@
         subnets:
           - "{{ Motiva_privSub1_out.subnet.id }}"
           - "{{ Motiva_privSub2_out.subnet.id }}"
-          - "{{ Motiva_privSub3_out.subnet_id }}"
+          - "{{ Motiva_privSub3_out.subnet.id }}"
         routes:
           - dest: 0.0.0.0/0
             gateway_id: "{{ Motiva_IGW_out.gateway_id }}"
