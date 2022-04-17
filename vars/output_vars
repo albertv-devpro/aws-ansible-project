@@ -1,0 +1,10 @@
+vpc_id: vpc-0fc10a769275e8dd0
+Motiva_pubSub1_id: subnet-0b5fe2467bca21821
+Motiva_pubSub2_id: subnet-0f47d8499dabd85fb
+Motiva_pubSub3_id: subnet-049f1cb20068803c1
+Motiva_privSub1_id: subnet-0003e764212e43c9a
+Motiva_privSub2_id: subnet-00ea76cbe60a8d401
+Motiva_privSub3_id: subnet-05a0dffb8f89f1dbb
+Motiva_IGW_id: igw-07f4dcd60808318cf
+Motiva_NATGW_id: nat-0959c0ec524809f3d
+Motiva_pubRT_route_id: rtb-0f623646ca413f121
