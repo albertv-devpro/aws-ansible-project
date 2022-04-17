@@ -73,18 +73,7 @@
         vpc_subnet_id: "{{ Motiva_pubSub1_id }}"
       register: Bastion_host_out
 
-    - name: Install and upgrade pip
-      pip:
-        name: pip
-        extra_args: --upgrade
-        executable: pip3
 
-    - name: Install boto3 and botocore with pip3 module
-      pip:
-        name:
-          - boto3
-          - botocore
-        executable: pip-3.7
 
 
 
