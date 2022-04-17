@@ -18,7 +18,7 @@
     - name: Save Bastion login key into a file name as bastion-key.pem
       copy:
         contents: "{{ key_out.key.private_key }}"
-        dest: ./bastion-key.pem
+        dest: "./bastion-key.pem"
         mode: 0600
       when: key_out.changed
 
