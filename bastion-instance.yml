@@ -56,7 +56,7 @@
           Name: "Bastion_host"
           Project: Ansible_project
           Owner: Motiva_Devops_Team
-        group_id: "{{ BastionSG_out }}"
+        group_id: "{{ BastionSG_out.group_id }}"
         vpc_subnet_id: "{{ Motiva_pubSub1_id }}"
       register: Bastion_host_out
 
