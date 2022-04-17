@@ -67,11 +67,11 @@
         executable: pip3
 
     - name: Install boto3 and botocore with pip3 module
-        pip:
-          name:
+      pip:
+        name:
           - boto3
           - botocore
-          executable: pip-3.7
+        executable: pip-3.7
 
 
 
