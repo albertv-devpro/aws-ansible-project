@@ -142,24 +142,24 @@
             gateway_id: "{{ Motiva_IGW_out.gateway_id }}"
       register: Motiva_pubRT_out
 
- ####################################################
-
-     - name: Create a Private subnet route table.
-       ec2_vpc_route_table:
-         vpc_id: "{{ vpc_out.vpc.id}}"
-         region: "{{ region }}"
-         subnets:
-           - "{{ Motiva_privSub1_out.subnet.id }}"
-           - "{{ Motiva_privSub2_out.subnet.id }}"
-           - "{{ Motiva_privSub3_out.subnet_id }}"
-         routes:
-           - dest: 0.0.0.0/0
-             gateway_id: "{{ Motiva_IGW_out.gateway_id }}"
-         tags:
-            Name: Motiva_privRT
-       register: Motiva_privRT_out
-
-  ####################################################
+# ####################################################
+#
+#     - name: Create a Private subnet route table.
+#       ec2_vpc_route_table:
+#         vpc_id: "{{ vpc_out.vpc.id}}"
+#         region: "{{ region }}"
+#         subnets:
+#           - "{{ Motiva_privSub1_out.subnet.id }}"
+#           - "{{ Motiva_privSub2_out.subnet.id }}"
+#           - "{{ Motiva_privSub3_out.subnet_id }}"
+#         routes:
+#           - dest: 0.0.0.0/0
+#             gateway_id: "{{ Motiva_IGW_out.gateway_id }}"
+#         tags:
+#            Name: Motiva_privRT
+#       register: Motiva_privRT_out
+#
+#  ####################################################
 
     - debug:
           var: "{{ item }}"
