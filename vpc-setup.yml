@@ -18,6 +18,7 @@
          state: "{{ state }}"
       register: vpc_out
 
+
 ####################################################
 
     - name: Create first public subnet
