@@ -121,8 +121,6 @@
         wait: yes
         region: "{{ region }}"
         if_exist_do_not_create: true
-        tags:
-          Name: Motiva-NATGW
       register: Motiva_NATGW_out
 
 ####################################################
