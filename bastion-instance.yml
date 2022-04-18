@@ -62,7 +62,7 @@
       register: Bastion_host_out
 
     - name: Insert/Update "BastionSGid" in vars/output_vars
-      blockinflie:
+      blockinfile:
         path: vars/vpc-output_vars
         backup: yes
         block: |

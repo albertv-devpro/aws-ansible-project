@@ -235,7 +235,7 @@
 ################Creating a block file to store Ip address ###########################################
 
     - name: Insert/Update Host Ip & name in file provision-stack/group_vars/hostip
-      blockinflie:
+      blockinfile:
         path: provision-stack/group_vars/hosts-ips
         block: |
           web01_nginx_ip: {{ web01_nginx_out.tagged_instances[0].private_ip }}
@@ -245,7 +245,7 @@
           db01_mysql_ip: {{ db01_mysql_out.tagged_instances[0].private_ip }}
 
     - name: Insert/Update Inventory File provision_stack/inventory-motivalogic directory
-      blockinflie:
+      blockinfile:
         path: provision-stack/inventory-motivalogic
         backup: yes
         block: |
