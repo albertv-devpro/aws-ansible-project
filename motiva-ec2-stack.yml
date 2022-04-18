@@ -263,7 +263,7 @@
           db01_mysql
 
           [control]
-          control_server
+          control-server
 
           [stack_inst:children]
           websrvgrp
