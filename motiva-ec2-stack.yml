@@ -291,5 +291,3 @@
         dest: provision-stack/loginkey-motiva.pem
         mode: '0400'
 
-#####################################################################################################
-##############Insert/Update Inventory File provision_stack/inventory-motivalogic directory ########################################
