@@ -1,0 +1,7 @@
+# Ubuntu Serer 20.04 LTS(HVMI), SSD volume Type t2.micro AMi`s
+
+nginx_ami: ami-0fb653ca2d3203ac1
+tomcat_ami: ami-0fb653ca2d3203ac1
+memcached_ami: ami-0fb653ca2d3203ac1
+rmq_ami: ami-0fb653ca2d3203ac1
+mysql_ami: ami-0fb653ca2d3203ac1

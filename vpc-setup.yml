@@ -192,8 +192,8 @@
 
     - name: Create variable file for VPC output.
       copy:
-        content: "vpc_id: {{ vpc_out.vpc.id }}\nMotiva_pubSub1_id: {{ Motiva_pubSub1_out.subnet.id }}\nMotiva_pubSub2_id: {{ Motiva_pubSub2_out.subnet.id }}\nMotiva_pubSub3_id: {{ Motiva_pubSub3_out.subnet.id }}\nMotiva_privSub1_id: {{ Motiva_privSub1_out.subnet.id }}\nMotiva_privSub2_id: {{ Motiva_privSub2_out.subnet.id }}\nMotiva_privSub3_id: {{ Motiva_privSub3_out.subnet.id }}\nMotiva_IGW_id: {{ Motiva_IGW_out.gateway_id }}\nMotiva_NATGW_id: {{ Motiva_NATGW_out.nat_gateway_id }}\nMotiva_pubRT_route_id: {{ Motiva_pubRT_out.route_table.id}}\n\nMotiva_privRT_route_id: {{ Motiva_privRT_out.route_table.id}}"
-        dest: vars/output_vars
+        content: "region: {{ region }}\nvpc_id: {{ vpc_out.vpc.id }}\nMotiva_pubSub1_id: {{ Motiva_pubSub1_out.subnet.id }}\nMotiva_pubSub2_id: {{ Motiva_pubSub2_out.subnet.id }}\nMotiva_pubSub3_id: {{ Motiva_pubSub3_out.subnet.id }}\nMotiva_privSub1_id: {{ Motiva_privSub1_out.subnet.id }}\nMotiva_privSub2_id: {{ Motiva_privSub2_out.subnet.id }}\nMotiva_privSub3_id: {{ Motiva_privSub3_out.subnet.id }}\nMotiva_IGW_id: {{ Motiva_IGW_out.gateway_id }}\nMotiva_NATGW_id: {{ Motiva_NATGW_out.nat_gateway_id }}\nMotiva_pubRT_route_id: {{ Motiva_pubRT_out.route_table.id}}\n\nMotiva_privRT_route_id: {{ Motiva_privRT_out.route_table.id}}"
+        dest: vars/vpc-output_vars
 
 
 

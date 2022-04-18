@@ -1,0 +1,292 @@
+---
+- name: Setup Motivalogic Stack
+  hosts: local
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Import VPC setup variables
+      include_vars: vars/vpc-output_vars
+    - name: Import AMI setup variables
+      include_vars: vars/vpc-ec2-ami-setup
+    - name: Import VPC setup variables
+      include_vars: vars/vpc_setup
+##################################################################################
+    - name: Creating Motiva ec2 key pair
+      ec2_key:
+        name: Motiva-ec2-Key
+        region: "{{ region }}"
+      register: key_out
+
+    - name: Save cc2 login key into a file name as loginkey-motiva.pem
+      copy:
+        contents: "{{ key_out.key.private_key }}"
+        dest: "./loginkey-motiva.pem"
+        mode: '0600'
+      when: key_out.changed
+
+##################################################################################
+
+    - name: Create Security Group for load Balancer
+      ec2_group:
+        name: MotivaELB-SG
+        description: Allow port 80 and 443 from everywhere and all port within Security Group
+        vpc_id: "{{ vpc_id }}"
+        region: "{{ region }}"
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 443
+            to_port: 443
+            cidr_ip: 0.0.0.0/0
+      register: MotivaELBSG_out
+
+    - name: Create Security Group for motivalogic Ec2 stack instances
+      ec2_group:
+        name: MotivaEC2-stack-SG
+        description: Allow port 22 from everywhere and all port within Security Group
+        vpc_id: "{{ vpc_id }}"
+        region: "{{ region }}"
+        purge_rules: no
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            group_id: "{{ BastionSGid }}"
+
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            group_id: "{{ MotivaELBSG_out.group_id }}"
+      register: MotivaEC2StackSG_out
+
+    - name: Update Security Group with its own Sg id
+      ec2_group:
+        name: MotivaEC2-stack-SG
+        description: Allow port 22 from everywhere and all port within Security Group
+        vpc_id: "{{ vpc_id }}"
+        region: "{{ region }}"
+        purge_rules: no
+        rules:
+          - proto: all
+            group_id: "{{ MotivaEC2StackSG_out.group_id }}"
+      register: MotivaEC2StackSG_out
+
+##################################################################################
+################Creating EC2 Instances ###########################################
+
+    - name: Create Nginx web01 Instance
+      ec2:
+        key_name: Motiva-ec2-Key
+        instance_type: t2.micro
+        image: "{{ nginx_ami }}"
+        wait: yes
+        wait_timeout: 300
+        region: "{{ region }}"
+        instance_tags:
+          Name: "web01-nginx"
+          Project: Ansible_project
+          Owner: Motiva_Devops_Team
+        exact_count: 1
+        count_tag:
+          Name: "web01-nginx"
+          Project: Ansible_project
+          Owner: Motiva_Devops_Team
+        group_id: "{{ MotivaEC2StackSG_out.group_id }}"
+        vpc_subnet_id: "{{ Motiva_privSub1_id }}"
+      register: web01_nginx_out
+
+    - name: Create Tomcat app01 Instance
+      ec2:
+        key_name: Motiva-ec2-Key
+        instance_type: t2.micro
+        image: "{{ tomcat_ami }}"
+        wait: yes
+        wait_timeout: 300
+        region: "{{ region }}"
+        instance_tags:
+          Name: "app01-tomcat"
+          Project: Ansible_project
+          Owner: Motiva_Devops_Team
+        exact_count: 1
+        count_tag:
+          Name: "app01-tomcat"
+          Project: Ansible_project
+          Owner: Motiva_Devops_Team
+        group_id: "{{ MotivaEC2StackSG_out.group_id }}"
+        vpc_subnet_id: "{{ Motiva_privSub1_id }}"
+      register: app01_tomcat_out
+
+    - name: Create Memcached mc01 Instance
+      ec2:
+        key_name: Motiva-ec2-Key
+        instance_type: t2.micro
+        image: "{{ memcached_ami }}"
+        wait: yes
+        wait_timeout: 300
+        region: "{{ region }}"
+        instance_tags:
+          Name: "mc01-memcached"
+          Project: Ansible_project
+          Owner: Motiva_Devops_Team
+        exact_count: 1
+        count_tag:
+          Name: "mc01-memcached"
+          Project: Ansible_project
+          Owner: Motiva_Devops_Team
+        group_id: "{{ MotivaEC2StackSG_out.group_id }}"
+        vpc_subnet_id: "{{ Motiva_privSub2_id }}"
+      register: mc01_memcached_out
+
+    - name: Create RabbitMQ rmq01 Instance
+      ec2:
+        key_name: Motiva-ec2-Key
+        instance_type: t2.micro
+        image: "{{ rmq_ami }}"
+        wait: yes
+        wait_timeout: 300
+        region: "{{ region }}"
+        instance_tags:
+          Name: "rmq01-messagequeue"
+          Project: Ansible_project
+          Owner: Motiva_Devops_Team
+        exact_count: 1
+        count_tag:
+          Name: "rmq01-messagequeue"
+          Project: Ansible_project
+          Owner: Motiva_Devops_Team
+        group_id: "{{ MotivaEC2StackSG_out.group_id }}"
+        vpc_subnet_id: "{{ Motiva_privSub2_id }}"
+      register: rmq01_messagequeue_out
+
+    - name: Create Maria-SQL db01 Instance
+      ec2:
+        key_name: Motiva-ec2-Key
+        instance_type: t2.micro
+        image: "{{ mysql_ami }}"
+        wait: yes
+        wait_timeout: 300
+        region: "{{ region }}"
+        instance_tags:
+          Name: "db01-mysql"
+          Project: Ansible_project
+          Owner: Motiva_Devops_Team
+        exact_count: 1
+        count_tag:
+          Name: "db01-mysql"
+          Project: Ansible_project
+          Owner: Motiva_Devops_Team
+        group_id: "{{ MotivaEC2StackSG_out.group_id }}"
+        vpc_subnet_id: "{{ Motiva_privSub3_id }}"
+      register: db01_mysql_out
+
+      debug:
+        var: db01_mysql_out.tagged_instances[0].id
+
+##################################################################################
+################Creating Load balancers ###########################################
+
+    # Configure a health check and the access logs
+    - local_action:
+        module: ec2_elb_lb
+        name: "Motiva-elb"
+        state: "{{ state }}"
+        region: "{{ region }}"
+        instance_ids:
+          - "{{ web01_nginx_out.tagged_instance[0].id }}"
+        zones:
+          - "{{ zone1 }}"
+          - "{{ zone2 }}"
+          - "{{ zone3 }}"#
+        subnets:
+          - "{{ Motiva_pubSub1_id }}"
+          - "{{ Motiva_pubSub2_id }}"
+          - "{{ Motiva_pubSub3_id }}"
+        listeners:
+          - protocol: http # options are http, https, ssl, tcp
+            load_balancer_port: 80
+            instance_port: 80
+        health_check:
+            ping_protocol: http # options are http, https, ssl, tcp
+            ping_port: 80
+            ping_path: "/index.html" # not required for tcp or ssl
+            response_timeout: 5 # seconds
+            interval: 30 # seconds
+            unhealthy_threshold: 2
+            healthy_threshold: 10
+        access_logs:
+            interval: 5 # minutes (defaults to 60)
+            s3_location: "my-bucket" # This value is required if access_logs is set
+            s3_prefix: "logs
+
+#####################################################################################################
+################Creating a block file to store Ip address ###########################################
+
+    - name: Insert/Update Host Ip & name in file provision-stack/group_vars/hostip
+      blockinflie:
+        path: provision-stack/group_vars/hosts-ips
+        block: |
+          web01_nginx_ip: "{{ web01_nginx_out.tagged_instances[0].private_ip }}"
+          app01_tomcat_ip: "{{ app01_tomcat_out.tagged_instances[0].private_ip }}"
+          mc01_memcached_ip: "{{ mc01_memcached_out.tagged_instances[0].private_ip }}"
+          rmq01_messagequeue_ip: "{{ rmq01_messagequeue_out.tagged_instances[0].private_ip }}"
+          db01_mysql_ip: "{{ db01_mysql_out.tagged_instances[0].private_ip }}"
+
+    - name: Insert/Update Inventory File provision_stack/inventory-motivalogic directory
+      blockinflie:
+        path: provision-stack/inventory-motivalogic
+        backup: yes
+        block: |
+          web01_nginx ansible_host={{ web01_nginx_out.tagged_instances[0].private_ip }}
+          app01_tomcat ansible_host={{ app01_tomcat_out.tagged_instances[0].private_ip }}
+          mc01_memcached ansible_host={{ mc01_memcached_out.tagged_instances[0].private_ip }}
+          rmq01_messagequeue ansible_host={{ rmq01_messagequeue_out.tagged_instances[0].private_ip }}
+          db01_mysql ansible_host={{ db01_mysql_out.tagged_instances[0].private_ip }}
+          control_server ansible_host=127.0.0.1 ansible_connection=local
+
+          [websrvgrp]
+          web01_nginx
+
+          [appsrvgrp]
+          app01_tomcat
+
+          [rmqsrvgrp]
+          rmq01_messagequeue
+
+          [mcsrvgrp]
+          mc01_memcached
+
+          [dbsrvgrp]
+          db01_mysql
+
+          [control]
+          control_server
+
+          [stack_inst:children]
+          websrvgrp
+          appsrvgrp
+          rmqsrvgrp
+          mcsrvgrp
+          dbsrvgrp
+
+          [stack_inst:vars]
+          ansible_user=ubuntu
+          ansible_ssh_private_key_file=loginkey-motiva.pem
+#         ansible_python_interpreter=/usr/bin/python3
+
+
+
+#####################################################################################################
+################Copy login key to provision_stack directory ########################################
+
+    - name: Copy login key into provision_stack directory
+      copy:
+        src: loginkey-motiva.pem
+        dest: provision-stack/loginkey-motiva.pem
+        mode: '0400'
+
+#####################################################################################################
+##############Insert/Update Inventory File provision_stack/inventory-motivalogic directory ########################################
