@@ -280,8 +280,6 @@
           ansible_ssh_private_key_file=loginkey-motiva.pem
 #         ansible_python_interpreter=/usr/bin/python3
 
-
-
 #####################################################################################################
 ################Copy login key to provision_stack directory ########################################
 
@@ -290,4 +288,3 @@
         src: loginkey-motiva.pem
         dest: provision-stack/loginkey-motiva.pem
         mode: '0400'
-
