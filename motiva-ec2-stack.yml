@@ -186,6 +186,9 @@
       debug:
         var: db01_mysql_out.tagged_instances[0].id
 
+    - s3_bucket:
+        name: motiva-bucket-01
+        state: present
 ##################################################################################
 ################Creating Load balancers ###########################################
 
@@ -219,7 +222,7 @@
             healthy_threshold: 10
         access_logs:
             interval: 5 # minutes (defaults to 60)
-            s3_location: "my-bucket" # This value is required if access_logs is set
+            s3_location: "motiva-bucket-01" # This value is required if access_logs is set
             s3_prefix: "logs
 
 #####################################################################################################

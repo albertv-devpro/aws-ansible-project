@@ -2,9 +2,10 @@
 - name: Generate artifact, copy artifact & sql file to files directory
   hosts: localhost
   connection: local
+  gather_fact: False
   become: yes
   tasks:
-    - name: Install jdj, Maven, git
+    - name: Install jdk, Maven, git
       apt:
         name: "{{ item }}"
         state: present
