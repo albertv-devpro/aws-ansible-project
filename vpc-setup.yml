@@ -116,7 +116,7 @@
 ####################################################
 
     - name: Create new nat gateway and allocate new EIP if a nat gateway does not yet exist in the subnet.
-      ec2_vpc_nat_gateway:
+      ec2_vpc_nat_gateway:cd
         state: "{{ state }}"
         subnet_id: "{{ Motiva_pubSub1_out.subnet.id }}"
         wait: yes

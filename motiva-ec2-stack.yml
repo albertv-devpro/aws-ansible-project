@@ -232,11 +232,11 @@
       blockinflie:
         path: provision-stack/group_vars/hosts-ips
         block: |
-          web01_nginx_ip: "{{ web01_nginx_out.tagged_instances[0].private_ip }}"
-          app01_tomcat_ip: "{{ app01_tomcat_out.tagged_instances[0].private_ip }}"
-          mc01_memcached_ip: "{{ mc01_memcached_out.tagged_instances[0].private_ip }}"
-          rmq01_messagequeue_ip: "{{ rmq01_messagequeue_out.tagged_instances[0].private_ip }}"
-          db01_mysql_ip: "{{ db01_mysql_out.tagged_instances[0].private_ip }}"
+          web01_nginx_ip: {{ web01_nginx_out.tagged_instances[0].private_ip }}
+          app01_tomcat_ip: {{ app01_tomcat_out.tagged_instances[0].private_ip }}
+          mc01_memcached_ip: {{ mc01_memcached_out.tagged_instances[0].private_ip }}
+          rmq01_messagequeue_ip: {{ rmq01_messagequeue_out.tagged_instances[0].private_ip }}
+          db01_mysql_ip: {{ db01_mysql_out.tagged_instances[0].private_ip }}
 
     - name: Insert/Update Inventory File provision_stack/inventory-motivalogic directory
       blockinflie:
