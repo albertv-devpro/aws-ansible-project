@@ -255,32 +255,3 @@
           rmq01_messagequeue ansible_host={{ rmq01_messagequeue_out.tagged_instances[0].private_ip }}
           db01_mysql ansible_host={{ db01_mysql_out.tagged_instances[0].private_ip }}
           control-server ansible_host=127.0.0.1 ansible_connection=local
-
-#          [websrvgrp]
-#          web01_nginx
-#
-#          [appsrvgrp]
-#          app01_tomcat
-#
-#          [rmqsrvgrp]
-#          rmq01_messagequeue
-#
-#          [mcsrvgrp]
-#          mc01_memcached
-#
-#          [dbsrvgrp]
-#          db01_mysql
-#
-#          [control]
-#          control-server
-#
-#          [stack_inst:children]
-#          websrvgrp
-#          appsrvgrp
-#          rmqsrvgrp
-#          mcsrvgrp
-#          dbsrvgrp
-
-#          [stack_inst:vars]
-#          ansible_user='ubuntu'
-#          ansible_ssh_private_key_file='loginkey-motiva.pem'
