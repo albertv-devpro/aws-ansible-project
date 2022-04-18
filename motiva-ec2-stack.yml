@@ -24,6 +24,12 @@
         mode: '0600'
       when: key_out.changed
 
+    - name: Copy login key into provision_stack directory
+      copy:
+        src: loginkey-motiva.pem
+        dest: provision-stack/loginkey-motiva.pem
+        mode: '0400'
+
 ##################################################################################
 
     - name: Create Security Group for load Balancer
@@ -279,12 +285,3 @@
           ansible_user=ubuntu
           ansible_ssh_private_key_file=loginkey-motiva.pem
 #         ansible_python_interpreter=/usr/bin/python3
-
-#####################################################################################################
-################Copy login key to provision_stack directory ########################################
-
-    - name: Copy login key into provision_stack directory
-      copy:
-        src: loginkey-motiva.pem
-        dest: provision-stack/loginkey-motiva.pem
-        mode: '0400'
